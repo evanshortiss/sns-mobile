@@ -1,1 +1,3 @@
-module.exports = require('./lib/interface');
+module.exports = {
+  PlatformApplication: require('./lib/PlatformApplication')
+}

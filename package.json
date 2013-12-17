@@ -1,5 +1,5 @@
 {
-  "name": "sns-push-mobile",
+  "name": "sns-mobile",
   "version": "0.0.0",
   "description": "Push notifications to Android and iOS devices easily using this module.",
   "main": "index.js",
