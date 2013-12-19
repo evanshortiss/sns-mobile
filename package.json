@@ -9,5 +9,9 @@
   "repository": "",
   "author": "Evan Shortiss",
   "license": "BSD",
-  "keywords": ["sns", "amazon", "aws", "apns", "gcm", "push", "notification", "notification"]
+  "keywords": ["sns", "amazon", "aws", "apns", "gcm", "push", "notification", "notification"],
+  "dependencies": {
+    "async": "*",
+    "aws-sdk": "2.0.0-rc3"
+  }
 }

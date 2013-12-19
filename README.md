@@ -1,5 +1,143 @@
 #SNS Mobile Push
 
-Module to make interacting with mobile push notifications for iOS and Android easier.
+Module to make interacting with mobile push notifications for iOS and Android easier. Wraps the Amazon aws-sdk node module. The idea is that you can create an object to represent each Platform Application you plan to use and remove the excess features that aren't needed for Android and iOS applications.
 
-Work in progress.
+## Setting Up a User for SNS
+To use Amazon SNS you need a Secret Access Key and an Access Key Id. Getting these will require you to create a user under the IAM section of AWS and attach a User Policy with the following Policy Document:
+
+*Disclaimer: I'm not an AWS ninja, this might not be the best/safest configuration, but it works. *
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AccessToSNS",
+      "Effect": "Allow",
+      "Action": [
+        "sns:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+```
+
+## Simple Code Example for Android
+The below example creates an SNS instance for an Android application identified by a PlatformApplicationArn.
+
+```
+var SNS = require('sns-push-mobile');
+
+var SNS_KEY_ID = process.env['SNS_KEY_ID'],
+  SNS_ACCESS_KEY = process.env['SNS_ACCESS_KEY'],
+  ANDROID_ARN = process.env['SNS_ANDROID_ARN'],
+
+  var androidApp = new SNS({
+    platform: 'android',
+    region: 'eu-west-1',
+    apiVersion: '2010-03-31',
+    accessKeyId: SNS_ACCESS_KEY,
+    secretAccessKey: SNS_KEY_ID,
+    platformApplicationArn: ANDROID_ARN
+  });
+
+  // Add a user, the endpointArn is their unique id
+  // endpointArn is required to send messages to the device
+  androidApp.addUser('some_fake_deviceid_that_i_made_up', JSON.stringify({
+    some: 'extra data'
+  }), function(err, endpointArn) {
+    if(err) {
+      throw err;
+    }
+
+    // Send a simple String or data to the client
+    androidApp.sendMessage(enpointArn, 'Hi There!', function(err, messageId) {
+      if(err) {
+        throw err;
+      }
+
+      console.log('Message sent, ID was: ' + messageId);
+    });
+  });
+```
+
+## Running Tests
+With the nyan reporter. Such nyan. Wow.
+```
+npm install -g mocha
+cd sns-push-mobile
+mocha --reporter nyan
+
+Ensure that SNS_ACCESS_KEY, SNS_KEY_ID and SNS_ANDROID_ARN env vars are set for these tests!
+
+Running tests with settings...
+
+SNS_KEY_ID: YOUR_SECRET_KEY
+SNS_ACCESS_KEY: YOUR_ACCESS_KEY
+SNS_ANDROID_ARN: YOUR_ANDROID_ARN
+SNS_iOS_ARN: YOUR_iOS_ARN
+
+ 9   -_-_-_-_-__,------,
+ 0   -_-_-_-_-__|  /\_/\ 
+ 0   -_-_-_-_-_~|_( ^ .^) 
+     -_-_-_-_-_ ""  "" 
+
+  9 passing (2 seconds)
+```
+
+## Events Emitted
+Instances created will emit events as listed below.
+
+#### messageSent
+Emitted when a message sends successfully. Callback has format callback(endpointArn, res.MessageId)
+
+#### userDeleted
+When a user is deleted this is emitted. Callback has format callback(endpointArn)
+
+#### sendFailed
+If a message fails to send this is emitted with format callback(endpointArn, err)
+
+#### userAdded
+When a user is added this is emitted with the format callback(endpointArn, deviceId)
+
+
+## API
+
+#### SNS(opts)
+Expects an object with the following params:
+* platform: 'android' or 'ios'
+* region: The Amazon region e.g 'eu-west-1'
+* apiVersion: Amazon API version, I have only used '2010-03-31'
+* accessKeyId: Amazon user Access Key.
+* secretAccessKey: Amazon user Secret Access Key.
+* platformApplicationArn: The PlatformApplicationArn for the Platform Application the interface operates on.
+
+#### getPlatformApplicationArn()
+Returns the platformApplicationArn provided to the constructor.
+
+#### getRegion()
+Returns the region being used.
+
+#### getApiVersion()
+Returns apiVersion being used.
+
+#### getApplications
+Get all Platform Applications. This will not allow you to interface with other PlatformApplications but may be useful to just get a list of you applications.
+
+#### getUser(endpointArn, callback)
+Get a user via endpointArn. The callback(err, user) receives an Object containg Attributes for the user and the EndpointArn.
+
+#### getUsers(callback)
+Get all users, this could take a while due to a potentially high number of requests required to get each page of users. The callback(err, users) receives an Array containing users.
+
+#### deleteUser(endpointArn, callback)
+Delete a user from SNS. Callback has format callback(err)
+
+#### sendMessage(endpointArn, message, callback)
+Send a message to a user.  The callback format is callback(err, messageId).
+
+#### broadcastMessage(message, callback)
+Send message to all users. May take some time with large sets of users as it has to page through users. Callback format is callback(err).
