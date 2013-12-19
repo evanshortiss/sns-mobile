@@ -92,16 +92,28 @@ SNS_iOS_ARN: YOUR_iOS_ARN
 Instances created will emit events as listed below.
 
 #### messageSent
-Emitted when a message sends successfully. Callback has format callback(endpointArn, res.MessageId)
+```
+function (endpointArn, res.MessageId) {}
+```
+Emitted when a message sends successfully.
 
 #### userDeleted
-When a user is deleted this is emitted. Callback has format callback(endpointArn)
+```
+function (endpointArn) {}
+```
+When a user is deleted this is emitted.
 
 #### sendFailed
-If a message fails to send this is emitted with format callback(endpointArn, err)
+```
+function (endpointArn, err) {}
+```
+If a message fails to send this is emitted.
 
 #### userAdded
-When a user is added this is emitted with the format callback(endpointArn, deviceId)
+```
+function (endpointArn, deviceId) {}
+```
+When a user is added this is emitted.
 
 
 ## API
