@@ -137,7 +137,31 @@ Get all users, this could take a while due to a potentially high number of reque
 Delete a user from SNS. Callback has format callback(err)
 
 #### sendMessage(endpointArn, message, callback)
-Send a message to a user.  The callback format is callback(err, messageId).
+Send a message to a user. Message can be a String or an Object with the formats below. The callback format is callback(err, messageId). 
+
+iOS:
+
+```
+{
+  aps: {
+    alert: message
+  }
+}
+```
+
+Read more about APNS payload [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html).
+
+Android:
+
+```
+{
+  data: {
+    message: message
+  }
+}
+```
+
+Read more about GCM [here](http://developer.android.com/google/gcm/c2dm.html).
 
 #### broadcastMessage(message, callback)
 Send message to all users. May take some time with large sets of users as it has to page through users. Callback format is callback(err).
