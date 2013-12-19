@@ -8,7 +8,7 @@
   },
   "repository": "",
   "author": "Evan Shortiss",
-  "license": "BSD",
+  "license": "MIT",
   "keywords": ["sns", "amazon", "aws", "apns", "gcm", "push", "notification", "notification"],
   "dependencies": {
     "async": "*",
