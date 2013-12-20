@@ -5,7 +5,7 @@ Module to make interacting with mobile push notifications for iOS and Android ea
 ## Setting Up a User for SNS
 To use Amazon SNS you need a Secret Access Key and an Access Key Id. Getting these will require you to create a user under the IAM section of AWS and attach a User Policy with the following Policy Document:
 
-*Disclaimer: I'm not an AWS ninja, this might not be the best/safest configuration, but it works. *
+*Disclaimer: I'm not an AWS ninja, this configuration may be too liberal but it works!*
 
 ```
 {
@@ -136,8 +136,8 @@ Returns the region being used.
 #### getApiVersion()
 Returns apiVersion being used.
 
-#### getApplications
-Get all Platform Applications. This will not allow you to interface with other PlatformApplications but may be useful to just get a list of you applications.
+#### getApplications(callback)
+Get all Platform Applications. This will not allow you to interface with other PlatformApplications but may be useful to just get a list of you applications. Callback format callback(err, users)
 
 #### getUser(endpointArn, callback)
 Get a user via endpointArn. The callback(err, user) receives an Object containg Attributes for the user and the EndpointArn.
