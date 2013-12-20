@@ -33,35 +33,35 @@ var SNS = require('sns-push-mobile');
 
 var SNS_KEY_ID = process.env['SNS_KEY_ID'],
   SNS_ACCESS_KEY = process.env['SNS_ACCESS_KEY'],
-  ANDROID_ARN = process.env['SNS_ANDROID_ARN'],
+  ANDROID_ARN = process.env['SNS_ANDROID_ARN'];
 
-  var androidApp = new SNS({
-    platform: 'android',
-    region: 'eu-west-1',
-    apiVersion: '2010-03-31',
-    accessKeyId: SNS_ACCESS_KEY,
-    secretAccessKey: SNS_KEY_ID,
-    platformApplicationArn: ANDROID_ARN
-  });
+var androidApp = new SNS({
+  platform: 'android',
+  region: 'eu-west-1',
+  apiVersion: '2010-03-31',
+  accessKeyId: SNS_ACCESS_KEY,
+  secretAccessKey: SNS_KEY_ID,
+  platformApplicationArn: ANDROID_ARN
+});
 
-  // Add a user, the endpointArn is their unique id
-  // endpointArn is required to send messages to the device
-  androidApp.addUser('some_fake_deviceid_that_i_made_up', JSON.stringify({
-    some: 'extra data'
-  }), function(err, endpointArn) {
+// Add a user, the endpointArn is their unique id
+// endpointArn is required to send messages to the device
+androidApp.addUser('some_fake_deviceid_that_i_made_up', JSON.stringify({
+  some: 'extra data'
+}), function(err, endpointArn) {
+  if(err) {
+    throw err;
+  }
+
+  // Send a simple String or data to the client
+  androidApp.sendMessage(enpointArn, 'Hi There!', function(err, messageId) {
     if(err) {
       throw err;
     }
 
-    // Send a simple String or data to the client
-    androidApp.sendMessage(enpointArn, 'Hi There!', function(err, messageId) {
-      if(err) {
-        throw err;
-      }
-
-      console.log('Message sent, ID was: ' + messageId);
-    });
+    console.log('Message sent, ID was: ' + messageId);
   });
+});
 ```
 
 ## Running Tests
