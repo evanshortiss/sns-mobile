@@ -1,1 +1,1 @@
-module.exports = require('./lib/Interface.js');
+module.exports = require('./lib/interface.js');
