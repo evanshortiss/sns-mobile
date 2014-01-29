@@ -176,4 +176,4 @@ Android:
 Read more about GCM [here](http://developer.android.com/google/gcm/c2dm.html).
 
 #### broadcastMessage(message, callback)
-Send message to all users. May take some time with large sets of users as it has to page through users. Callback format is callback(err).
+Send message to all users. May take some time with large sets of users as it has to page through users. Callback format is callback(err). If a single/mulitple messages fail to send the error will not be propogated/returned to the callback. To catch these errors use the _sendFailed_ event.
