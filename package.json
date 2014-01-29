@@ -1,17 +1,17 @@
 {
   "name": "sns-mobile",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Push notifications to Android and iOS devices easily using this module.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/"
   },
   "repository": "",
   "author": "Evan Shortiss",
   "license": "MIT",
-  "keywords": ["sns", "amazon", "aws", "apns", "gcm", "push", "notification", "notification"],
+  "keywords": ["sns", "amazon", "aws", "apns", "gcm", "push", "notification", "simple notification service"],
   "dependencies": {
-    "async": "*",
+    "async": "0.2.10",
     "aws-sdk": "2.0.0-rc3"
   }
 }
