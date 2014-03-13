@@ -17,6 +17,11 @@ describe('Test functionality of the module.', function() {
   this.timeout(10000);
 
   describe('Test interface creation and methods.', function() {
+    it('Should have events and supported platforms exposed on the interface', function() {
+      assert(SNS.SUPPORTED_PLATFORMS);
+      assert(SNS.EVENTS);
+    });
+    
     it('Should create an instance of Interface', function() {
       sns = new SNS({
         platform: 'android',
