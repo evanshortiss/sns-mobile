@@ -29,7 +29,8 @@ To use Amazon SNS you need a Secret Access Key and an Access Key Id. Getting the
 The below example creates an SNS instance for an Android application identified by a PlatformApplicationArn.
 
 ```
-var SNS = require('sns-push-mobile');
+var SNS = require('sns-push-mobile'),
+    EVENTS = SNS.EVENTS;
 
 var SNS_KEY_ID = process.env['SNS_KEY_ID'],
   SNS_ACCESS_KEY = process.env['SNS_ACCESS_KEY'],
@@ -81,15 +82,53 @@ SNS_ANDROID_ARN: YOUR_ANDROID_ARN
 SNS_iOS_ARN: YOUR_iOS_ARN
 
  9   -_-_-_-_-__,------,
- 0   -_-_-_-_-__|  /\_/\ 
- 0   -_-_-_-_-_~|_( ^ .^) 
-     -_-_-_-_-_ ""  "" 
+ 0   -_-_-_-_-__|  /\_/\
+ 0   -_-_-_-_-_~|_( ^ .^)
+     -_-_-_-_-_ ""  ""
 
   9 passing (2 seconds)
 ```
 
 ## Events Emitted
-Instances created will emit events as listed below.
+Instances created will emit events as listed below and callbacks should have the shown format. Event strings can be accessed as shown below.
+
+```
+var SNS = require('sns-mobile'),
+    EVENTS = SNS.EVENTS;
+
+// EVENTS.SENT_MESSAGE
+// EVENTS.BROADCAST_END
+// EVENTS.BROADCAST_START
+// EVENTS.FAILED_SEND
+// EVENTS.DELETED_USER
+// EVENTS.ADD_USER_FAILED
+// EVENTS.ADDED_USER
+
+var myApp = new SNS({
+  platform: 'android',
+  region: 'eu-west-1',
+  apiVersion: '2010-03-31',
+  accessKeyId: SNS_ACCESS_KEY,
+  secretAccessKey: SNS_KEY_ID,
+  platformApplicationArn: ANDROID_ARN
+});
+
+myApp.on(EVENTS.USER_ADDED, function(endpointArn, deviceId){
+    // Save user details to a db
+});
+```
+
+#### broadcastStart
+```
+function () {}
+```
+Emitted prior to broadcasting the first message.
+
+#### broadcastEnd
+```
+function () {}
+```
+Emitted once all messages are broadcast.
 
 #### messageSent
 ```
@@ -108,6 +147,12 @@ When a user is deleted this is emitted.
 function (endpointArn, err) {}
 ```
 If a message fails to send this is emitted.
+
+#### addUserFailed
+```
+function(deviceToken, err)
+```
+Fired when adding a user fails.
 
 #### userAdded
 ```
@@ -145,11 +190,14 @@ Get a user via endpointArn. The callback(err, user) receives an Object containg 
 #### getUsers(callback)
 Get all users, this could take a while due to a potentially high number of requests required to get each page of users. The callback(err, users) receives an Array containing users.
 
+#### addUser(deviceToken, [data], callback)
+Add a device/user to SNS with optional extra data. Callback has format fn(err, endpointArn).
+
 #### deleteUser(endpointArn, callback)
 Delete a user from SNS. Callback has format callback(err)
 
 #### sendMessage(endpointArn, message, callback)
-Send a message to a user. Message can be a String or an Object with the formats below. The callback format is callback(err, messageId). 
+Send a message to a user. Message can be a String or an Object with the formats below. The callback format is callback(err, messageId).
 
 iOS:
 
