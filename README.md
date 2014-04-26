@@ -28,7 +28,7 @@ To use Amazon SNS you need a Secret Access Key and an Access Key Id. Getting the
 ## Simple Code Example for Android
 The below example creates an SNS instance for an Android application identified by a PlatformApplicationArn.
 
-```
+```javascript
 var SNS = require('sns-push-mobile'),
     EVENTS = SNS.EVENTS;
 
@@ -42,7 +42,8 @@ var androidApp = new SNS({
   apiVersion: '2010-03-31',
   accessKeyId: SNS_ACCESS_KEY,
   secretAccessKey: SNS_KEY_ID,
-  platformApplicationArn: ANDROID_ARN
+  platformApplicationArn: ANDROID_ARN,
+  sandbox: true // This is required for targetting (iOS) APNS_SANDBOX only
 });
 
 // Add a user, the endpointArn is their unique id
