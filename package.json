@@ -12,6 +12,6 @@
   "keywords": ["sns", "amazon", "aws", "apns", "gcm", "push", "notification", "simple notification service"],
   "dependencies": {
     "async": "0.2.10",
-    "aws-sdk": "2.0.0-rc3"
+    "aws-sdk": "latest"
   }
 }
