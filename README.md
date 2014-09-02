@@ -64,6 +64,23 @@ androidApp.addUser('some_fake_deviceid_that_i_made_up', JSON.stringify({
     console.log('Message sent, ID was: ' + messageId);
   });
 });
+
+#updated!
+
+// Send a alert String with data to the client
+  androidApp.sendMessage(
+      enpointArn,
+      {
+        alert:'Hi There!',
+        data: JSON.stringify({foo:'bar'})
+      },
+      function(err, messageId) {
+        if(err) {
+          throw err;
+        }
+
+    console.log('Message sent, ID was: ' + messageId);
+  });
 ```
 
 ## Running Tests
