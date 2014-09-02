@@ -6,11 +6,7 @@
   "scripts": {
     "test": "mocha test/"
   },
-  "repository" :
-  { 
-    "type" : "git",
-    "url" : "https://github.com/xPutnikx/sns-mobile.git"
-  },
+  "repository" : "",
   "main" : "lib/interface",
   "author": "Evan Shortiss",
   "license": "MIT",
