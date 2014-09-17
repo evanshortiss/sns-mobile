@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha test/"
   },
-  "repository": "",
+  "repository": "https://github.com/evanshortiss/sns-mobile",
   "author": "Evan Shortiss",
   "license": "MIT",
   "keywords": ["sns", "amazon", "aws", "apns", "gcm", "push", "notification", "simple notification service"],
