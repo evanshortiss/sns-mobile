@@ -199,7 +199,7 @@ iOS:
 
 Read more about APNS payload [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html).
 
-Android:
+Android & Kindle Fire:
 
 ```
 {
@@ -209,7 +209,7 @@ Android:
 }
 ```
 
-Read more about GCM [here](http://developer.android.com/google/gcm/c2dm.html).
+Read more about GCM [here](http://developer.android.com/google/gcm/c2dm.html) and ADM [here](http://docs.aws.amazon.com/sns/latest/dg/mobile-push-adm.html).
 
 #### broadcastMessage(message, callback)
 Send message to all users. May take some time with large sets of users as it has to page through users. Callback format is callback(err). If a single/mulitple messages fail to send the error will not be propogated/returned to the callback. To catch these errors use the _sendFailed_ event.
