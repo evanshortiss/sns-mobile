@@ -91,6 +91,43 @@ describe('SNS Module.', function() {
     });
   });
 
+  it('Should retrieve a user by their EndpointArn and update their properties.', function(done) {
+    sns.addUser('anotherfakedeviceidthatimadeup', JSON.stringify({
+      username: 'fakeuserforattributetest'
+    }), function(err, endpointArn) {
+      sns.getUser(endpointArn, function(err, res) {
+
+        var attributes = {
+          CustomUserData: {
+            user_id: 'updated-attribute-user-id'
+          },
+          Enabled: 'true'
+        };
+        sns.setAttributes(res.EndpointArn, attributes, function(err, res) {
+          assert(!err);
+          assert(res === attributes);
+
+          sns.getUser(endpointArn, function(err, res) {
+            assert(!err);
+            assert(res.EndpointArn === endpointArn);
+            assert(res.Attributes);
+            assert(res.Attributes.Enabled === attributes.Enabled);
+            assert(res.Attributes.CustomUserData);
+            var responseUserData = JSON.parse(res.Attributes.CustomUserData);
+            var userData = JSON.parse(attributes.CustomUserData);
+            assert(responseUserData.user_id === userData.user_id);
+
+            sns.deleteUser(endpointArn, function(err) {
+              // delete test user we created so that we can re-run the test
+              done();
+            });
+          });
+
+        });
+      });
+    });
+  });
+
   it('Should retrieve a user by their EndpointArn and delete them', function(done) {
     sns.addUser('somefakedeviceidthatimadeup', JSON.stringify({
       username: 'fakeuser'
