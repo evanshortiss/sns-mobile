@@ -6,7 +6,8 @@ var assert = require('assert'),
 var SNS_KEY_ID = process.env['SNS_KEY_ID'],
   SNS_ACCESS_KEY = process.env['SNS_ACCESS_KEY'],
   ANDROID_ARN = process.env['SNS_ANDROID_ARN'],
-  iOS_ARN = process.env['SNS_iOS_ARN'];
+  iOS_ARN = process.env['SNS_iOS_ARN'],
+  SNS_REGION = 'eu-west-1';
 
 console.log('Running tests with settings...\n');
 console.log('SNS_KEY_ID: %s\nSNS_ACCESS_KEY: %s\nSNS_ANDROID_ARN: %s\nSNS_iOS_ARN: %s\n', SNS_KEY_ID, SNS_ACCESS_KEY, ANDROID_ARN, iOS_ARN);
@@ -23,8 +24,8 @@ describe('SNS Module.', function() {
 
   it('Should create an instance of Interface', function() {
     sns = new SNS({
-      platform: 'android',
-      region: 'eu-west-1',
+      platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
+      region: SNS_REGION,
       apiVersion: '2010-03-31',
       accessKeyId: SNS_ACCESS_KEY,
       secretAccessKey: SNS_KEY_ID,
@@ -36,8 +37,8 @@ describe('SNS Module.', function() {
 
   it('Should return correct apiVersion, region, PlatformApplicationArn', function() {
     sns = new SNS({
-      platform: 'android',
-      region: 'eu-west-1',
+      platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
+      region: SNS_REGION,
       apiVersion: '2010-03-31',
       accessKeyId: SNS_ACCESS_KEY,
       secretAccessKey: SNS_KEY_ID,
@@ -46,15 +47,15 @@ describe('SNS Module.', function() {
 
     assert(sns);
     assert(sns.getApiVersion() === '2010-03-31');
-    assert(sns.getRegion() === 'eu-west-1');
+    assert(sns.getRegion() === SNS_REGION);
     assert(sns.getPlatformApplicationArn() === ANDROID_ARN);
   });
 
   // Replace SNS instance for each test
   beforeEach(function() {
     sns = new SNS({
-      platform: 'android',
-      region: 'eu-west-1',
+      platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
+      region: SNS_REGION,
       apiVersion: '2010-03-31',
       accessKeyId: SNS_ACCESS_KEY,
       secretAccessKey: SNS_KEY_ID,
