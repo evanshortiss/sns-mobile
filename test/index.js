@@ -117,12 +117,16 @@ describe('SNS Module.', function() {
             var userData = JSON.parse(attributes.CustomUserData);
             assert(responseUserData.user_id === userData.user_id);
 
-            sns.deleteUser(endpointArn, function(err) {
-              // delete test user we created so that we can re-run the test
-              done();
+            var emptyAttributes = {}; // empty attributes should generate an error
+            sns.setAttributes(endpointArn, emptyAttributes, function(err, res) {
+              assert(err);
+
+              sns.deleteUser(endpointArn, function(err) {
+                // Cleanup: delete test user we created so that we can re-run the test
+                done();
+              });
             });
           });
-
         });
       });
     });
