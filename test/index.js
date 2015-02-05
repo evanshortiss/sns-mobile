@@ -6,7 +6,8 @@ var assert = require('assert'),
 var SNS_KEY_ID = process.env['SNS_KEY_ID'],
   SNS_ACCESS_KEY = process.env['SNS_ACCESS_KEY'],
   ANDROID_ARN = process.env['SNS_ANDROID_ARN'],
-  iOS_ARN = process.env['SNS_iOS_ARN'];
+  iOS_ARN = process.env['SNS_iOS_ARN'],
+  SNS_REGION = 'eu-west-1';
 
 console.log('Running tests with settings...\n');
 console.log('SNS_KEY_ID: %s\nSNS_ACCESS_KEY: %s\nSNS_ANDROID_ARN: %s\nSNS_iOS_ARN: %s\n', SNS_KEY_ID, SNS_ACCESS_KEY, ANDROID_ARN, iOS_ARN);
@@ -23,8 +24,8 @@ describe('SNS Module.', function() {
 
   it('Should create an instance of Interface', function() {
     sns = new SNS({
-      platform: 'android',
-      region: 'eu-west-1',
+      platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
+      region: SNS_REGION,
       apiVersion: '2010-03-31',
       accessKeyId: SNS_ACCESS_KEY,
       secretAccessKey: SNS_KEY_ID,
@@ -36,8 +37,8 @@ describe('SNS Module.', function() {
 
   it('Should return correct apiVersion, region, PlatformApplicationArn', function() {
     sns = new SNS({
-      platform: 'android',
-      region: 'eu-west-1',
+      platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
+      region: SNS_REGION,
       apiVersion: '2010-03-31',
       accessKeyId: SNS_ACCESS_KEY,
       secretAccessKey: SNS_KEY_ID,
@@ -46,15 +47,15 @@ describe('SNS Module.', function() {
 
     assert(sns);
     assert(sns.getApiVersion() === '2010-03-31');
-    assert(sns.getRegion() === 'eu-west-1');
+    assert(sns.getRegion() === SNS_REGION);
     assert(sns.getPlatformApplicationArn() === ANDROID_ARN);
   });
 
   // Replace SNS instance for each test
   beforeEach(function() {
     sns = new SNS({
-      platform: 'android',
-      region: 'eu-west-1',
+      platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
+      region: SNS_REGION,
       apiVersion: '2010-03-31',
       accessKeyId: SNS_ACCESS_KEY,
       secretAccessKey: SNS_KEY_ID,
@@ -87,6 +88,47 @@ describe('SNS Module.', function() {
       assert(!err);
       assert(endpointArn);
       done();
+    });
+  });
+
+  it('Should retrieve a user by their EndpointArn and update their properties.', function(done) {
+    sns.addUser('anotherfakedeviceidthatimadeup', JSON.stringify({
+      username: 'fakeuserforattributetest'
+    }), function(err, endpointArn) {
+      sns.getUser(endpointArn, function(err, res) {
+
+        var attributes = {
+          CustomUserData: {
+            user_id: 'updated-attribute-user-id'
+          },
+          Enabled: 'true'
+        };
+        sns.setAttributes(res.EndpointArn, attributes, function(err, res) {
+          assert(!err);
+          assert(res === attributes);
+
+          sns.getUser(endpointArn, function(err, res) {
+            assert(!err);
+            assert(res.EndpointArn === endpointArn);
+            assert(res.Attributes);
+            assert(res.Attributes.Enabled === attributes.Enabled);
+            assert(res.Attributes.CustomUserData);
+            var responseUserData = JSON.parse(res.Attributes.CustomUserData);
+            var userData = JSON.parse(attributes.CustomUserData);
+            assert(responseUserData.user_id === userData.user_id);
+
+            var emptyAttributes = {}; // empty attributes should generate an error
+            sns.setAttributes(endpointArn, emptyAttributes, function(err, res) {
+              assert(err);
+
+              sns.deleteUser(endpointArn, function(err) {
+                // Cleanup: delete test user we created so that we can re-run the test
+                done();
+              });
+            });
+          });
+        });
+      });
     });
   });
 
