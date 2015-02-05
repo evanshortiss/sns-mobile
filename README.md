@@ -239,3 +239,14 @@ Read more about GCM [here](http://developer.android.com/google/gcm/c2dm.html) an
 
 #### broadcastMessage(message, callback)
 Send message to all users. May take some time with large sets of users as it has to page through users. Callback format is callback(err). If a single/mulitple messages fail to send the error will not be propogated/returned to the callback. To catch these errors use the _sendFailed_ event.
+
+
+## Contributors
+Contrinbutions are very much welcome, just submit a PR with updated tests where 
+applicable. Current tests run against the actual SNS service, which may not be 
+ideal so feel free to mock that out if you like too ;)
+
+Thanks to these peeps for contributions:
+
+* [iclems](https://github.com/iclems)
+* [race](https://github.com/race)
