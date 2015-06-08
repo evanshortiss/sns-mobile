@@ -4,7 +4,8 @@
   "description": "Push notifications to Android, Kindle Fire, and iOS devices easily using this module.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/"
+    "test": "mocha test/",
+    "test-debug": "mocha --debug-brk test/"
   },
   "bugs": {
     "url": "https://github.com/evanshortiss/sns-mobile/issues"
