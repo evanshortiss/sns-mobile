@@ -83,6 +83,8 @@ var SNS = require('sns-mobile'),
 // EVENTS.DELETED_USER
 // EVENTS.ADD_USER_FAILED
 // EVENTS.ADDED_USER
+// EVENTS.ATTRIBUTES_UPDATE_FAILED
+// EVENTS.ATTRIBUTES_UPDATED
 
 var myApp = new SNS({
   platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
@@ -141,6 +143,18 @@ function (endpointArn, deviceId) {}
 ```
 When a user is added this is emitted.
 
+#### attributesUpdateFailed
+```
+function (endpointArn, err) {}
+```
+If updating the attributes for an endpoint fails this is emitted.
+
+#### attributesUpdated
+```
+function (endpointArn, attributes) {}
+```
+When an endpoint's attributes are updated this is emitted.
+
 
 ## API
 
@@ -182,6 +196,15 @@ Get all users, this could take a while due to a potentially high number of reque
 #### addUser(deviceToken, [data], callback)
 Add a device/user to SNS with optional extra data. Callback has format fn(err, endpointArn).
 
+#### setAttributes(endpointArn, attributes, callback)
+Update an existing endpoint's attributes. Attributes is an object with the following optional properties:
+
+* CustomUserData: <object|string>
+* Enabled: <string>
+* Token: <string>
+
+Callback has format fn(err, endpointArn).
+
 #### deleteUser(endpointArn, callback)
 Delete a user from SNS. Callback has format callback(err)
 
@@ -216,3 +239,14 @@ Read more about GCM [here](http://developer.android.com/google/gcm/c2dm.html) an
 
 #### broadcastMessage(message, callback)
 Send message to all users. May take some time with large sets of users as it has to page through users. Callback format is callback(err). If a single/mulitple messages fail to send the error will not be propogated/returned to the callback. To catch these errors use the _sendFailed_ event.
+
+
+## Contributors
+Contrinbutions are very much welcome, just submit a PR with updated tests where 
+applicable. Current tests run against the actual SNS service, which may not be 
+ideal so feel free to mock that out if you like too ;)
+
+Thanks to these peeps for contributions:
+
+* [iclems](https://github.com/iclems)
+* [race](https://github.com/race)
