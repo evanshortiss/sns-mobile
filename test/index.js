@@ -1,7 +1,7 @@
 console.warn('Ensure that SNS_ACCESS_KEY, SNS_KEY_ID and SNS_ANDROID_ARN env vars are set for these tests!\n');
 
 var assert = require('assert'),
-  SNS = require('../lib/Interface');
+  SNS = require('../lib/interface');
 
 var SNS_KEY_ID = process.env['SNS_KEY_ID'],
   SNS_ACCESS_KEY = process.env['SNS_ACCESS_KEY'],
@@ -27,8 +27,8 @@ describe('SNS Module.', function() {
       platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
       region: SNS_REGION,
       apiVersion: '2010-03-31',
-      accessKeyId: SNS_ACCESS_KEY,
-      secretAccessKey: SNS_KEY_ID,
+      accessKeyId: SNS_KEY_ID,
+      secretAccessKey: SNS_ACCESS_KEY,
       platformApplicationArn: ANDROID_ARN
     });
 
@@ -40,8 +40,8 @@ describe('SNS Module.', function() {
       platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
       region: SNS_REGION,
       apiVersion: '2010-03-31',
-      accessKeyId: SNS_ACCESS_KEY,
-      secretAccessKey: SNS_KEY_ID,
+      accessKeyId: SNS_KEY_ID,
+      secretAccessKey: SNS_ACCESS_KEY,
       platformApplicationArn: ANDROID_ARN
     });
 
@@ -57,8 +57,8 @@ describe('SNS Module.', function() {
       platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
       region: SNS_REGION,
       apiVersion: '2010-03-31',
-      accessKeyId: SNS_ACCESS_KEY,
-      secretAccessKey: SNS_KEY_ID,
+      accessKeyId: SNS_KEY_ID,
+      secretAccessKey: SNS_ACCESS_KEY,
       platformApplicationArn: ANDROID_ARN
     });
   });
