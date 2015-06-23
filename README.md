@@ -5,6 +5,12 @@ If you were/are using 1.0.0 or 1.0.1 please upgrade to 1.0.2, it fixes a major b
 
 Module to make interacting with mobile push notifications for iOS and Android easier. Wraps the Amazon aws-sdk node module. The idea is that you can create an object to represent each Platform Application you plan to use and remove the excess features that aren't needed for Android and iOS applications.
 
+## Installation
+
+```sh
+npm install sns-mobile
+```
+
 ## Setting Up a User for SNS
 To use Amazon SNS you need a Secret Access Key and an Access Key Id. Getting these will require you to create a user under the IAM section of AWS and attach a User Policy with the following Policy Document:
 
@@ -32,7 +38,7 @@ To use Amazon SNS you need a Secret Access Key and an Access Key Id. Getting the
 The below example creates an SNS instance for an Android application identified by a PlatformApplicationArn.
 
 ```javascript
-var SNS = require('sns-push-mobile'),
+var SNS = require('sns-mobile'),
     EVENTS = SNS.EVENTS;
 
 var SNS_KEY_ID = process.env['SNS_KEY_ID'],
@@ -67,6 +73,12 @@ androidApp.addUser('some_fake_deviceid_that_i_made_up', JSON.stringify({
     console.log('Message sent, ID was: ' + messageId);
   });
 });
+```
+
+## Running Tests
+
+```sh
+SNS_KEY_ID="<your_sns_key_id>" SNS_ACCESS_KEY="<your_sns_access_key>" SNS_ANDROID_ARN="arn:aws:sns:..." npm test
 ```
 
 ## Events Emitted
