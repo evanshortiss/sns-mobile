@@ -85,6 +85,16 @@ var SNS = require('sns-mobile'),
 // EVENTS.ADDED_USER
 // EVENTS.ATTRIBUTES_UPDATE_FAILED
 // EVENTS.ATTRIBUTES_UPDATED
+// EVENTS.TOPIC_CREATED
+// EVENTS.CREATE_TOPIC_FAILED
+// EVENTS.TOPIC_DELETED
+// EVENTS.DELETE_TOPIC_FAILED
+// EVENTS.SUBSCRIBED
+// EVENTS.SUBSCRIBE_FAILED
+// EVENTS.UNSUBSCRIBED
+// EVENTS.UNSUBSCRIBE_FAILED
+// EVENTS.PUBLISH_FAILED
+// EVENTS.PUBLISHED_MESSAGE
 
 var myApp = new SNS({
   platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
@@ -155,6 +165,65 @@ function (endpointArn, attributes) {}
 ```
 When an endpoint's attributes are updated this is emitted.
 
+#### topicCreated
+```
+function (topicArn, topicName) {}
+```
+Emitted when a topic has been created successfully.
+
+#### createTopicFailed
+```
+function (topicName) {}
+```
+Emitted when an attempt to create a topic has failed.
+
+#### topicDeleted
+```
+function (topicArn) {}
+```
+Emitted when a topic has been deleted successfully.
+
+#### deleteTopicFailed
+```
+function (topicArn) {}
+```
+Emitted when an attempt to delete a topic has failed.
+
+#### subscribed
+```
+function (subscriptionArn, endpointArn, topicArn) {}
+```
+Emitted when an endpoint has been subscribed to a topic successfully.
+
+#### subscribeFailed
+```
+function (endpointArn, topicArn, err) {}
+```
+Emitted when an attempt to subscribe an endpoint to a topic has failed.
+
+#### unsubscribed
+```
+function (subscriptionArn) {}
+```
+Emitted when an endpoint has been unsubscribed from a topic successfully.
+
+#### unsubscribeFailed
+```
+function (subscriptionArn, err) {}
+```
+Emitted when an attempt to unsubscribe an endpoint from a topic has failed.
+
+#### publishedMessage
+```
+function (topicArn, messageId) {}
+```
+Emitted when a message has been published to a topic successfully.
+
+#### publishFailed
+```
+function (topicArn, err) {}
+```
+Emitted when an attempt to publish a message to a topic has failed.
 
 ## API
 
@@ -193,8 +262,17 @@ Get a user via endpointArn. The callback(err, user) receives an Object containg 
 #### getUsers(callback)
 Get all users, this could take a while due to a potentially high number of requests required to get each page of users. The callback(err, users) receives an Array containing users.
 
+#### getTopics(callback)
+Get all topics by paging through them. The callback(err, topics) receives an Array containing topic objects.
+
+#### getSubscriptions(topicArn, callback)
+Get all subscriptions for the topic with the given topicArn by paging through them. The callback(err, subscriptions) receives an Array containing subscription objects.
+
 #### addUser(deviceToken, [data], callback)
 Add a device/user to SNS with optional extra data. Callback has format fn(err, endpointArn).
+
+#### createTopic(name, callback)
+Create a new topic with the given name. The callback has the format fn(err, topicArn).
 
 #### setAttributes(endpointArn, attributes, callback)
 Update an existing endpoint's attributes. Attributes is an object with the following optional properties:
@@ -208,14 +286,37 @@ Callback has format fn(err, endpointArn).
 #### deleteUser(endpointArn, callback)
 Delete a user from SNS. Callback has format callback(err)
 
+#### deleteTopic(topicArn, callback)
+Delete the topic with the given topicArn. The callback has the format fn(err).
+
 #### sendMessage(endpointArn, message, callback)
 Send a message to a user. The _message_ parameter can be a String, or an Object with the formats below. The callback format is callback(err, messageId).
+
+#### subscribe(endpointArn, topicArn, callback)
+Subscribe an endpoint to a topic. The callback has the format fn(err, subscriptionArn).
+
+#### unsubscribe(subscriptionArn, callback)
+Unsubscribe an endpoint from a topic via the given subscriptionArn. The callback has the format fn(err).
+
+#### publishToTopic(topicArn, message, callback)
+Publish a message a topic. The callback has the format fn(err, messageId).
+Please note that the message *must* be in the final Amazon SNS format as
+specified [here](http://docs.aws.amazon.com/sns/latest/dg/mobile-push-send-custommessage.html#mobile-push-send-multiplatform), i.e. it
+*must* contain a key called `default` and platform-specific messages *must* already be JSON-stringified. Example:
+
+```json
+{
+  "default": "Default message which must be present when publishing a message to a topic. Will only be used if a message is not present for one of the notification platforms.",
+  "APNS": "{\"aps\":{\"alert\": \"Check out these awesome deals!\",\"url\":\"www.amazon.com\"} }",
+  "GCM":"{\"data\":{\"message\":\"Check out these awesome deals!\",\"url\":\"www.amazon.com\"}}"
+}
+```
 
 You can read about Amazon SNS message formats [here](http://docs.aws.amazon.com/sns/latest/dg/mobile-push-send-custommessage.html).
 
 iOS:
 
-```
+```js
 {
   aps: {
     alert: message
@@ -227,7 +328,7 @@ Read more about APNS payload [here](https://developer.apple.com/library/ios/docu
 
 Android & Kindle Fire:
 
-```
+```js
 {
   data: {
     message: message
