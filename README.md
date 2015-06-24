@@ -359,7 +359,8 @@ Contrinbutions are very much welcome, just submit a PR with updated tests where
 applicable. Current tests run against the actual SNS service, which may not be 
 ideal so feel free to mock that out if you like too ;)
 
-Thanks to these peeps for contributions:
+Thanks to these awesome folks for contributions:
 
+* [abiskop](https://github.com/abiskop)
 * [iclems](https://github.com/iclems)
 * [race](https://github.com/race)
