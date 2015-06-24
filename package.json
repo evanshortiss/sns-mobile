@@ -1,7 +1,7 @@
 {
   "name": "sns-mobile",
-  "version": "1.1.0",
-  "description": "Push notifications to Android, Kindle Fire, and iOS devices easily using this module.",
+  "version": "1.2.0",
+  "description": "Send push notifications to Android, Kindle Fire, and iOS devices easily.",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/",
@@ -19,7 +19,11 @@
     "aws",
     "apns",
     "gcm",
+    "kindle",
+    "fire",
     "push",
+    "ios",
+    "android",
     "notification",
     "simple notification service"
   ],

@@ -1,7 +1,7 @@
-mocha				= ./node_modules/.bin/mocha
+mocha			= ./node_modules/.bin/mocha
 jshint			= ./node_modules/.bin/jshint
-linelint 		= ./node_modules/.bin/linelint
-lintspaces 	= ./node_modules/.bin/lintspaces
+linelint		= ./node_modules/.bin/linelint
+lintspaces 		= ./node_modules/.bin/lintspaces
 
 .PHONY : test
 
