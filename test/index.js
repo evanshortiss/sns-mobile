@@ -1,7 +1,7 @@
 console.warn('Ensure that SNS_ACCESS_KEY, SNS_KEY_ID and SNS_ANDROID_ARN env vars are set for these tests!\n');
 
 var assert = require('assert'),
-  SNS = require('../lib/Interface');
+  SNS = require('../lib/interface');
 
 var SNS_KEY_ID = process.env['SNS_KEY_ID'],
   SNS_ACCESS_KEY = process.env['SNS_ACCESS_KEY'],
@@ -17,6 +17,9 @@ var sns = null;
 describe('SNS Module.', function() {
   this.timeout(10000);
 
+  var theTopicArnThatThisTestCreated;
+  var theSubscriptionArnThatThisTestCreated;
+
   it('Should have events and supported platforms exposed on the interface', function() {
     assert(SNS.SUPPORTED_PLATFORMS);
     assert(SNS.EVENTS);
@@ -27,8 +30,8 @@ describe('SNS Module.', function() {
       platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
       region: SNS_REGION,
       apiVersion: '2010-03-31',
-      accessKeyId: SNS_ACCESS_KEY,
-      secretAccessKey: SNS_KEY_ID,
+      accessKeyId: SNS_KEY_ID,
+      secretAccessKey: SNS_ACCESS_KEY,
       platformApplicationArn: ANDROID_ARN
     });
 
@@ -40,8 +43,8 @@ describe('SNS Module.', function() {
       platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
       region: SNS_REGION,
       apiVersion: '2010-03-31',
-      accessKeyId: SNS_ACCESS_KEY,
-      secretAccessKey: SNS_KEY_ID,
+      accessKeyId: SNS_KEY_ID,
+      secretAccessKey: SNS_ACCESS_KEY,
       platformApplicationArn: ANDROID_ARN
     });
 
@@ -57,8 +60,8 @@ describe('SNS Module.', function() {
       platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
       region: SNS_REGION,
       apiVersion: '2010-03-31',
-      accessKeyId: SNS_ACCESS_KEY,
-      secretAccessKey: SNS_KEY_ID,
+      accessKeyId: SNS_KEY_ID,
+      secretAccessKey: SNS_ACCESS_KEY,
       platformApplicationArn: ANDROID_ARN
     });
   });
@@ -182,9 +185,129 @@ describe('SNS Module.', function() {
       }, function(err, res) {
         assert(!err);
         assert(res);
-        assert(typeof res === 'string');
+        assert.strictEqual(typeof res, 'string');
         done();
       })
+    });
+  });
+
+  it('Should create a topic.', function(done) {
+    sns.createTopic('this_is_a_test_dummy_486438735', function(err, topicArn) {
+      assert(!err);
+      assert(topicArn);
+      theTopicArnThatThisTestCreated = topicArn;
+      done();
+    });
+  });
+
+  it('Should list topics.', function(done) {
+    sns.getTopics(function(err, topics) {
+      assert(!err);
+      assert(topics);
+      assert(topics.length > 0);
+      var theTopicThatWasCreatedEarlier = topics.filter(function(topic) {
+        return topic.TopicArn === theTopicArnThatThisTestCreated;
+      })[0];
+      assert(theTopicThatWasCreatedEarlier)
+      done();
+    });
+  });
+
+  it('Should subscribe a user to a topic.', function(done) {
+    sns.addUser('yetanotherfakedeviceid', JSON.stringify({
+      username: 'anotherfakeuser'
+    }), function(err, endpointArn) {
+      sns.subscribe(endpointArn, theTopicArnThatThisTestCreated, function(err, subscriptionArn) {
+        assert(!err);
+        assert(subscriptionArn);
+        theSubscriptionArnThatThisTestCreated = subscriptionArn;
+        done();
+      });
+    });
+  });
+
+  it('Should list all subscriptions.', function(done) {
+    sns.getSubscriptions(function(err, subscriptions) {
+      assert(!err);
+      assert(subscriptions);
+      assert(subscriptions.length > 0);
+      var theSubscriptionThatWasCreatedEarlier = subscriptions.filter(function(subscription) {
+        return subscription.SubscriptionArn === theSubscriptionArnThatThisTestCreated;
+      })[0];
+      assert(theSubscriptionThatWasCreatedEarlier)
+      done();
+    });
+  });
+
+  it('Should list subscriptions by topic.', function(done) {
+    sns.getSubscriptions(theTopicArnThatThisTestCreated, function(err, subscriptions) {
+      assert(!err);
+      assert(subscriptions);
+      assert(subscriptions.length > 0);
+      var theSubscriptionThatWasCreatedEarlier = subscriptions.filter(function(subscription) {
+        return subscription.SubscriptionArn === theSubscriptionArnThatThisTestCreated;
+      })[0];
+      assert(theSubscriptionThatWasCreatedEarlier)
+      done();
+    });
+  });
+
+  it('Should fail to publish a message to a topic if message body is missing "default" key.', function(done) {
+    sns.publishToTopic(theTopicArnThatThisTestCreated, {
+      foo: 'missing top-level key "default"'
+    }, function(err, res) {
+      assert(err);
+      assert.equal(err.message, 'Argument "message" must be in SNS multi-platform publishing format.');
+      done();
+    })
+  });
+
+  it('Should fail to publish a message to a topic if "default" value in message body is not a string.', function(done) {
+    sns.publishToTopic(theTopicArnThatThisTestCreated, {
+      'default': {
+        that: 'is_not_a_string_but_an_object'
+      }
+    }, function(err, res) {
+      assert(err);
+      assert.equal(err.message, 'Argument "message" must be in SNS multi-platform publishing format.');
+      done();
+    })
+  });
+
+  it('Should publish a message to a topic.', function(done) {
+    var messageBody = {
+      'default': JSON.stringify({
+        data: 'Hello Topic',
+        moreData: 'Hello Topic'
+      }),
+      'APNS': JSON.stringify({
+        aps: {
+          alert: 'test dummy text'
+        }
+      }),
+      'GCM': JSON.stringify({
+        some: 'value'
+      })
+    }
+    sns.publishToTopic(theTopicArnThatThisTestCreated, messageBody, function(err, res) {
+      assert(!err);
+      assert(res);
+      assert.strictEqual(typeof res, 'string');
+      done();
+    })
+  });
+
+  it('Should unsubscribe a user from a topic.', function(done) {
+    sns.unsubscribe(theSubscriptionArnThatThisTestCreated, function(err) {
+      assert(!err);
+      done();
+    });
+  });
+
+  it('Should delete a topic.', function(done) {
+    sns.deleteTopic(theTopicArnThatThisTestCreated, function(err) {
+      assert(!err);
+      done();
     });
   });
 });
