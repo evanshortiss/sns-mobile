@@ -81,7 +81,6 @@ describe('SNS Module.', function() {
     assert(sns.getPlatformApplicationArn() === ANDROID_ARN);
   });
 
-
   // Replace SNS instance for each test
   beforeEach(function() {
     sns = new SNS({
