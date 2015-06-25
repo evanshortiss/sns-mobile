@@ -1,6 +1,7 @@
 console.warn('Ensure that SNS_ACCESS_KEY, SNS_KEY_ID and SNS_ANDROID_ARN env vars are set for these tests!\n');
 
 var assert = require('assert'),
+  AWS = require('aws-sdk'),
   SNS = require('../lib/interface');
 
 var SNS_KEY_ID = process.env['SNS_KEY_ID'],
@@ -53,6 +54,33 @@ describe('SNS Module.', function() {
     assert(sns.getRegion() === SNS_REGION);
     assert(sns.getPlatformApplicationArn() === ANDROID_ARN);
   });
+
+  it('Should return correct apiVersion, region, PlatformApplicationArn when a custom SNS object is supplied', function() {
+    sns = new SNS({
+      platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
+      platformApplicationArn: ANDROID_ARN,
+      sns: new AWS.SNS({region: SNS_REGION, apiVersion: '2010-03-31'})
+    });
+
+    assert(sns);
+    assert(sns.getApiVersion() === '2010-03-31');
+    assert(sns.getRegion() === SNS_REGION);
+    assert(sns.getPlatformApplicationArn() === ANDROID_ARN);
+  });
+
+  it('Should return correct apiVersion, region, PlatformApplicationArn when custom aws params are supplied', function() {
+    sns = new SNS({
+      platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
+      platformApplicationArn: ANDROID_ARN,
+      sns: {region: SNS_REGION, apiVersion: '2014-02-01'}
+    });
+
+    assert(sns);
+    assert(sns.getApiVersion() === '2014-02-01');
+    assert(sns.getRegion() === SNS_REGION);
+    assert(sns.getPlatformApplicationArn() === ANDROID_ARN);
+  });
+
 
   // Replace SNS instance for each test
   beforeEach(function() {
