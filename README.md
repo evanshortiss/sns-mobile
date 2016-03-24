@@ -293,7 +293,7 @@ Update an existing endpoint's attributes. Attributes is an object with the follo
 * Enabled: <string>
 * Token: <string>
 
-Callback has format fn(err, endpointArn).
+Callback has format fn(err, attributes).
 
 #### deleteUser(endpointArn, callback)
 Delete a user from SNS. Callback has format callback(err)
