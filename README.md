@@ -49,8 +49,8 @@ var androidApp = new SNS({
   platform: SNS.SUPPORTED_PLATFORMS.ANDROID,
   region: 'eu-west-1',
   apiVersion: '2010-03-31',
-  accessKeyId: SNS_ACCESS_KEY,
-  secretAccessKey: SNS_KEY_ID,
+  accessKeyId: SNS_KEY_ID,
+  secretAccessKey: SNS_ACCESS_KEY,
   platformApplicationArn: ANDROID_ARN,
   //sandbox: true (This is required for targetting (iOS) APNS_SANDBOX only)
 });
