@@ -118,7 +118,7 @@ var myApp = new SNS({
   // sandbox: true/false (If we're targetting Apple dev/live APNS)
 });
 
-myApp.on(EVENTS.USER_ADDED, function(endpointArn, deviceId){
+myApp.on(EVENTS.ADDED_USER, function(endpointArn, deviceId){
     // Save user details to a db
 });
 ```
