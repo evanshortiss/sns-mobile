@@ -65,7 +65,7 @@ androidApp.addUser('some_fake_deviceid_that_i_made_up', JSON.stringify({
   }
 
   // Send a simple String or data to the client
-  androidApp.sendMessage(enpointArn, 'Hi There!', function(err, messageId) {
+  androidApp.sendMessage(endpointArn, 'Hi There!', function(err, messageId) {
     if(err) {
       throw err;
     }
