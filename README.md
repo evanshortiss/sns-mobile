@@ -1,5 +1,7 @@
-# Important Update
-If you were/are using 1.0.0 or 1.0.1 please upgrade to 1.0.2, it fixes a major bug where messages were not sending.
+# Maintainer(s)
+
+I no longer use this and haven't got the capacity to maintain it.
+If you'd like to be a maintainer of this library please get in touch.
 
 # SNS Mobile Push
 
