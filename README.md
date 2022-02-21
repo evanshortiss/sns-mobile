@@ -1,7 +1,8 @@
 # Maintainer(s)
 
-I no longer use this and haven't got the capacity to maintain it.
-If you'd like to be a maintainer of this library please get in touch.
+**I no longer use this and haven't got the capacity to maintain it. If you'd like to be a maintainer of this library please get in touch.**
+
+A current active fork is available at https://github.com/kalisio/sns-mobile (have a look to https://github.com/evanshortiss/sns-mobile/issues/34 for some details).
 
 # SNS Mobile Push
 
