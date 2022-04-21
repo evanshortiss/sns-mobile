@@ -308,10 +308,13 @@ Delete the topic with the given topicArn. The callback has the format fn(err).
 Send a message to a user. The _message_ parameter can be a String, or an Object with the formats below. The callback format is callback(err, messageId).
 
 #### subscribe(endpointArn, topicArn, callback)
-Subscribe an endpoint to a topic. The callback has the format fn(err, subscriptionArn).
+Subscribe an endpoint to a topic with the implicit `application` protocol. The callback has the format fn(err, subscriptionArn).
 
 #### unsubscribe(subscriptionArn, callback)
 Unsubscribe an endpoint from a topic via the given subscriptionArn. The callback has the format fn(err).
+
+#### subscribeWithProtocol(endpointArn, topicArn, protocol, callback)
+Subscribe an endpoint to a topic using a specific protocol such as `email` or `sms`. The callback has the format fn(err, subscriptionArn).
 
 #### publishToTopic(topicArn, message, callback)
 Publish a message a topic. The callback has the format fn(err, messageId).
